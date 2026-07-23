@@ -1,0 +1,379 @@
+{
+  "name": "ISO 27001 Compliance Gap Analysis",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "082b30c6-ded2-4148-a13f-653a5dd3b679",
+      "name": "Run Gap Analysis",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        96
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"controls\": [\n    { \"Control_ID\": \"A.5.1\", \"Control_Name\": \"Policies for information security\", \"Requirement\": \"Management shall define, approve, publish and communicate information security policies\", \"Category\": \"Organizational\" },\n    { \"Control_ID\": \"A.5.2\", \"Control_Name\": \"Information security roles and responsibilities\", \"Requirement\": \"Security roles and responsibilities shall be defined and allocated according to organization needs\", \"Category\": \"Organizational\" },\n    { \"Control_ID\": \"A.5.7\", \"Control_Name\": \"Threat intelligence\", \"Requirement\": \"Information relating to information security threats shall be collected and analyzed to produce threat intelligence\", \"Category\": \"Organizational\" },\n    { \"Control_ID\": \"A.8.1\", \"Control_Name\": \"User endpoint devices\", \"Requirement\": \"Information stored on, processed by or accessible via user endpoint devices shall be protected\", \"Category\": \"Technological\" },\n    { \"Control_ID\": \"A.8.8\", \"Control_Name\": \"Management of technical vulnerabilities\", \"Requirement\": \"Information about technical vulnerabilities shall be obtained and the organization's exposure evaluated\", \"Category\": \"Technological\" }\n  ]\n}",
+        "options": {}
+      },
+      "id": "27b5a1a6-520b-4fa6-9ccd-1b60312f7b87",
+      "name": "ISO 27001 Controls",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        224,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "controls",
+        "options": {}
+      },
+      "id": "7b4a2d7c-e7ec-4204-8b0d-0f7b1b08a84f",
+      "name": "Split Controls",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        448,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "fieldsToMatchString": "Control_ID",
+        "joinMode": "enrichInput1",
+        "options": {
+          "multipleMatches": "first"
+        }
+      },
+      "id": "0b976100-822e-4c5f-96bd-025c5f3ff95c",
+      "name": "Match Controls & Evidence",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        672,
+        96
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"evidence\": [\n    { \"Control_ID\": \"A.5.1\", \"Evidence_Provided\": \"Policy document v1.2\", \"Status\": \"Partial\", \"Notes\": \"Missing review date and management approval signature\" },\n    { \"Control_ID\": \"A.5.2\", \"Evidence_Provided\": \"Org chart with security roles and RACI matrix\", \"Status\": \"Compliant\", \"Notes\": \"Roles documented and signed off by management\" },\n    { \"Control_ID\": \"A.5.7\", \"Evidence_Provided\": \"Subscribed to CERT-In advisories\", \"Status\": \"Non-Compliant\", \"Notes\": \"Threat feeds not integrated into risk assessment process\" },\n    { \"Control_ID\": \"A.8.1\", \"Evidence_Provided\": \"MDM partially deployed\", \"Status\": \"Non-Compliant\", \"Notes\": \"No disk encryption on approximately 40% of laptops\" }\n  ]\n}",
+        "options": {}
+      },
+      "id": "7b6c1c17-0419-4307-8f29-a7a67898c5e5",
+      "name": "Client Evidence",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        224,
+        192
+      ]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "evidence",
+        "options": {}
+      },
+      "id": "e99687df-9988-4f60-b105-a9e85c6753a4",
+      "name": "Split Evidence",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        448,
+        192
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "not-compliant",
+              "leftValue": "={{ $json.Status }}",
+              "rightValue": "Compliant",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "id": "bf05afdf-f991-460b-9257-9d05c255a2e0",
+      "name": "Needs Analysis",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        896,
+        96
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.groq.com/openai/v1/chat/completions",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "groqApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ {\"model\":\"llama-3.1-8b-instant\",\"temperature\":0.2,\"response_format\":{\"type\":\"json_object\"},\"messages\":[{\"role\":\"system\",\"content\":\"You are an expert ISO 27001 lead auditor. You produce concise, actionable compliance gap analysis and always respond with a single valid JSON object.\"},{\"role\":\"user\",\"content\":\"Analyze the following ISO 27001 control and its current evidence.\\nControl ID: \" + $json.Control_ID + \"\\nControl Name: \" + $json.Control_Name + \"\\nRequirement: \" + $json.Requirement + \"\\nCategory: \" + $json.Category + \"\\nCurrent Status: \" + ($json.Status || \"Missing - no evidence provided\") + \"\\nEvidence Provided: \" + ($json.Evidence_Provided || \"None\") + \"\\nAuditor Notes: \" + ($json.Notes || \"None\") + \"\\n\\nReturn ONLY a JSON object with these keys: gap_description (string), risk_impact (string), remediation (string, recommended remediation steps), priority (one of Critical, High, Medium, Low), timeline (suggested remediation timeframe such as 30 days, 60 days, 90 days).\"}]} }}",
+        "options": {}
+      },
+      "id": "cf8ba338-fb76-48e1-a5fb-037c73e6bc1d",
+      "name": "Groq Gap Analysis",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1120,
+        0
+      ],
+      "credentials": {
+        "groqApi": {
+          "id": "qHT2RbiYHTb5dLQ9",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const c = $('Needs Analysis').item.json;\nlet ai = {};\ntry {\n  const content = ($json.choices && $json.choices[0] && $json.choices[0].message)\n    ? $json.choices[0].message.content\n    : '{}';\n  ai = JSON.parse(content);\n} catch (e) {\n  ai = {};\n}\nreturn {\n  Control_ID: c.Control_ID,\n  Control_Name: c.Control_Name,\n  Current_Status: c.Status || 'Missing - no evidence',\n  Gap_Description: ai.gap_description || 'Unable to parse AI gap analysis; manual review required.',\n  Risk_Impact: ai.risk_impact || 'Not assessed',\n  Remediation: ai.remediation || 'Manual remediation planning required.',\n  Priority: ai.priority || 'Medium',\n  Timeline: ai.timeline || '90 days',\n};"
+      },
+      "id": "7c648acb-5fc9-4890-8fe6-b07929c1b8aa",
+      "name": "Build Gap Report",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1344,
+        0
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "d41aac3c-7c98-4087-b41b-b38bb29c3d85",
+      "name": "Compliance Gap Report",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1568,
+        96
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "cid",
+              "name": "Control_ID",
+              "value": "={{ $json.Control_ID }}",
+              "type": "string"
+            },
+            {
+              "id": "cname",
+              "name": "Control_Name",
+              "value": "={{ $json.Control_Name }}",
+              "type": "string"
+            },
+            {
+              "id": "cstatus",
+              "name": "Current_Status",
+              "value": "={{ $json.Status }}",
+              "type": "string"
+            },
+            {
+              "id": "cgap",
+              "name": "Gap_Description",
+              "value": "No gap identified - control is compliant.",
+              "type": "string"
+            },
+            {
+              "id": "crisk",
+              "name": "Risk_Impact",
+              "value": "None",
+              "type": "string"
+            },
+            {
+              "id": "crem",
+              "name": "Remediation",
+              "value": "Maintain current controls and evidence.",
+              "type": "string"
+            },
+            {
+              "id": "cprio",
+              "name": "Priority",
+              "value": "Low",
+              "type": "string"
+            },
+            {
+              "id": "ctime",
+              "name": "Timeline",
+              "value": "N/A",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "1e92250a-7dea-4820-9f8e-808547316c87",
+      "name": "Compliant Entry",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1344,
+        192
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Run Gap Analysis": {
+      "main": [
+        [
+          {
+            "node": "ISO 27001 Controls",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Client Evidence",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ISO 27001 Controls": {
+      "main": [
+        [
+          {
+            "node": "Split Controls",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Controls": {
+      "main": [
+        [
+          {
+            "node": "Match Controls & Evidence",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Match Controls & Evidence": {
+      "main": [
+        [
+          {
+            "node": "Needs Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Client Evidence": {
+      "main": [
+        [
+          {
+            "node": "Split Evidence",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Evidence": {
+      "main": [
+        [
+          {
+            "node": "Match Controls & Evidence",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Needs Analysis": {
+      "main": [
+        [
+          {
+            "node": "Groq Gap Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Compliant Entry",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Gap Analysis": {
+      "main": [
+        [
+          {
+            "node": "Build Gap Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Gap Report": {
+      "main": [
+        [
+          {
+            "node": "Compliance Gap Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compliant Entry": {
+      "main": [
+        [
+          {
+            "node": "Compliance Gap Report",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "6a89a432-ab84-4ccd-ba45-29d0b7194372",
+  "meta": {
+    "instanceId": "0387e85f30302bdb4225b39eadaed84ba225840f6c20dfbf9a169beba6590895"
+  },
+  "nodeGroups": [],
+  "id": "MR3z9TPby0hxz57e",
+  "tags": []
+}
