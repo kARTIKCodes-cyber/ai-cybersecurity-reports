@@ -41,6 +41,7 @@ AI-powered automation for cybersecurity GRC reporting. Built in public.
 ## 📊 Sample Output
 
 [View Sample Report](sample-report.html)
+![Report with Costs](report-with-costs.png)
 
 ## 📁 Workflows
 
