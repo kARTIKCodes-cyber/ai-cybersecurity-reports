@@ -11,23 +11,28 @@ AI-powered automation for cybersecurity GRC reporting. Built in public.
   - AI-generated impact summaries (Groq API - llama-3.1-8b-instant)
   - Color-coded risk levels (Critical/High/Medium/Low)
   - Auto-prioritized remediation timeline
+  - Business impact assessment per finding
+  - Estimated remediation cost range
+  - Total portfolio remediation cost
   - 5 vulnerabilities processed in 30 seconds
 
-### 2. Compliance Gap Analyzer
+### 2. ISO 27001 Compliance Gap Analyzer
 - **Input:** ISO 27001 controls + client evidence
 - **Output:** Structured gap report with remediation steps
 - **Features:**
   - Gap identification (Compliant/Partial/Non-Compliant)
   - Risk impact assessment
   - Priority + timeline recommendations
+  - Color-coded status badges
 
-### 3. SOC 2 Gap Analysis Report
+### 3. SOC 2 Compliance Gap Analyzer
 - **Input:** SOC 2 Trust Service Criteria + client evidence
-- **Output:** Audit-ready gap report sections
+- **Output:** Audit-ready gap report
 - **Features:**
-  - Criteria matching and evidence validation
+  - Criteria matching and gap analysis
   - AI-generated gap descriptions
   - Remediation recommendations
+  - Professional HTML formatting
 
 ## 🎥 Demos
 - [Vulnerability Report Demo](https://www.loom.com/share/5dc8a929366e45f0852c58e12b7bc6cc)
@@ -38,10 +43,17 @@ AI-powered automation for cybersecurity GRC reporting. Built in public.
 - [Groq API](https://groq.com/) — llama-3.1-8b-instant
 - HTML/CSS — report generation
 
-## 📊 Sample Output
+## 📊 Sample Outputs
 
-[View Sample Report](sample-report.html)
-![Report with Costs](report-with-costs.png)
+| Report | View |
+|---|---|
+| Vulnerability Report (with cost analysis) | [View](‎Vulnerability Scan Executive Summary.html) |
+| ISO 27001 Gap Report | [View](iso-gap-report.html) |
+| SOC 2 Gap Report | [View](soc2-gap-report.html) |
+
+![Vulnerability Report](report-with-costs.png)
+![ISO 27001 Report](iso-report-screenshot.png)
+![SOC 2 Report](soc2-report-screenshot.png)
 
 ## 📁 Workflows
 
@@ -56,12 +68,14 @@ All n8n workflows are in the `/workflows` folder:
 - Day 2: Vulnerability report generator working
 - Day 4: Compliance gap analyzer built
 - Day 5: Professional HTML report output
+- Day 6: Cost analysis + business impact added
+- Day 7: Three-product suite complete
 
 **Status:** Zero clients. Zero revenue. But the product works.
 
 ## 🤝 Connect
 - [LinkedIn](https://linkedin.com/in/kartik-sharma-b34a41422)
-- [Fiverr](your-fiverr-link-here)
+- [Fiverr]([your-fiverr-link-here](https://www.fiverr.com/s/BRqmdr1))
 
 ---
 
