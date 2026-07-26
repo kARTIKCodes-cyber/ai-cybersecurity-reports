@@ -48,7 +48,7 @@ AI-powered automation for cybersecurity GRC reporting. Built in public.
 
 | Report | Screenshot |
 |---|---|
-| Vulnerability Report (with cost analysis) | ![Vulnerability Report](report-with-costs.png) |
+| Vulnerability Report (with cost analysis) | ![Vulnerability Report](report-with-costs.png.png) |
 | ISO 27001 Gap Report | ![ISO 27001](iso-report-screenshot.png.png) |
 | SOC 2 Gap Report | ![SOC 2](Soc-report-screenshot.png.png) |
 
