@@ -47,7 +47,7 @@ AI-powered automation for cybersecurity GRC reporting. Built in public.
 
 | Report | View |
 |---|---|
-| Vulnerability Report (with cost analysis) | [View](‎Vulnerability Scan Executive Summary.html) |
+| Vulnerability Report (with cost analysis) | [View](vulnerability-Scan-Executive-summary.html) |
 | ISO 27001 Gap Report | [View](iso-gap-report.html) |
 | SOC 2 Gap Report | [View](soc2-gap-report.html) |
 
