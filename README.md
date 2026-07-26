@@ -14,9 +14,8 @@ AI-powered automation for cybersecurity GRC reporting. Built in public.
   - Business impact assessment per finding
   - Estimated remediation cost range
   - Total portfolio remediation cost
-  - 5 vulnerabilities processed in 30 seconds
 - **Live Demo:** [View Sample Report](Vulnerability%20Scan%20Executive%20Summary.html)
-- **Get It Done:** [Fiverr Gig](https://www.fiverr.com/s/GzVdL50)
+- **Hire Me:** [Fiverr Gig](https://www.fiverr.com/s/GzVdL50)
 
 ### 2. ISO 27001 Compliance Gap Analyzer
 - **Input:** ISO 27001 controls + client evidence
@@ -25,7 +24,6 @@ AI-powered automation for cybersecurity GRC reporting. Built in public.
   - Gap identification (Compliant/Partial/Non-Compliant)
   - Risk impact assessment
   - Priority + timeline recommendations
-  - Color-coded status badges
 - **Live Demo:** [View Sample Report](ISO%2027001%20Compliance%20Gap%20Analysis.html)
 
 ### 3. SOC 2 Compliance Gap Analyzer
@@ -35,10 +33,9 @@ AI-powered automation for cybersecurity GRC reporting. Built in public.
   - Criteria matching and gap analysis
   - AI-generated gap descriptions
   - Remediation recommendations
-  - Professional HTML formatting
 - **Live Demo:** [View Sample Report](SOC%202%20Gap%20Analysis%20report%20.html)
 
-## 🎥 Demos
+## 🎥 Video Demos
 - [Vulnerability Report Demo](https://www.loom.com/share/5dc8a929366e45f0852c58e12b7bc6cc)
 - [Compliance Gap Analyzer Demo](https://www.loom.com/share/09d4a83d1b33467bafc1efffc5b314d3)
 
@@ -47,20 +44,20 @@ AI-powered automation for cybersecurity GRC reporting. Built in public.
 - [Groq API](https://groq.com/) — llama-3.1-8b-instant
 - HTML/CSS — report generation
 
-## 📊 Sample Outputs
+## 📊 Sample Reports
 
-| Report | View |
+| Report | Screenshot |
 |---|---|
-| Vulnerability Report (with cost analysis) | [View](report-with-costs.png) |
-| ISO 27001 Gap Report | [View](iso-report.png) |
-| SOC 2 Gap Report | [View](Soc-report.png) |
+| Vulnerability Report (with cost analysis) | ![Vulnerability Report](report-with-costs.png) |
+| ISO 27001 Gap Report | ![ISO 27001](iso-report-screenshot.png.png) |
+| SOC 2 Gap Report | ![SOC 2](Soc-report-screenshot.png.png) |
 
 ## 📁 Workflows
 
 All n8n workflows are in the `/workflows` folder:
-- `Vulnerability Scan Executive Summary.json` — Raw scan → Executive report
-- `ISO 27001 Compliance Gap Analysis.json` — Controls + evidence → Gap report
-- `SOC 2 Gap Analysis Report.json` — SOC 2 criteria → Audit report
+- `Vulnerability Scan Executive Summary.json`
+- `ISO 27001 Compliance Gap Analysis.json`
+- `SOC 2 Gap Analysis Report.json`
 
 ## 🏗 Building in Public
 
