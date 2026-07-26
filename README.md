@@ -15,6 +15,8 @@ AI-powered automation for cybersecurity GRC reporting. Built in public.
   - Estimated remediation cost range
   - Total portfolio remediation cost
   - 5 vulnerabilities processed in 30 seconds
+- **Live Demo:** [View Sample Report](Vulnerability%20Scan%20Executive%20Summary.html)
+- **Get It Done:** [Fiverr Gig](https://www.fiverr.com/s/GzVdL50)
 
 ### 2. ISO 27001 Compliance Gap Analyzer
 - **Input:** ISO 27001 controls + client evidence
@@ -24,6 +26,7 @@ AI-powered automation for cybersecurity GRC reporting. Built in public.
   - Risk impact assessment
   - Priority + timeline recommendations
   - Color-coded status badges
+- **Live Demo:** [View Sample Report](ISO%2027001%20Compliance%20Gap%20Analysis.html)
 
 ### 3. SOC 2 Compliance Gap Analyzer
 - **Input:** SOC 2 Trust Service Criteria + client evidence
@@ -33,6 +36,7 @@ AI-powered automation for cybersecurity GRC reporting. Built in public.
   - AI-generated gap descriptions
   - Remediation recommendations
   - Professional HTML formatting
+- **Live Demo:** [View Sample Report](SOC%202%20Gap%20Analysis%20report%20.html)
 
 ## 🎥 Demos
 - [Vulnerability Report Demo](https://www.loom.com/share/5dc8a929366e45f0852c58e12b7bc6cc)
@@ -47,13 +51,9 @@ AI-powered automation for cybersecurity GRC reporting. Built in public.
 
 | Report | View |
 |---|---|
-| Vulnerability Report (with cost analysis) | [View](vulnerability-Scan-Executive-summary.html) |
-| ISO 27001 Gap Report | [View](iso-gap-report.html) |
-| SOC 2 Gap Report | [View](soc2-gap-report.html) |
-
-![Vulnerability Report](report-with-costs.png)
-![ISO 27001 Report](iso-report-screenshot.png)
-![SOC 2 Report](soc2-report-screenshot.png)
+| Vulnerability Report (with cost analysis) | [View](report-with-costs.png) |
+| ISO 27001 Gap Report | [View](iso-report.png) |
+| SOC 2 Gap Report | [View](Soc-report.png) |
 
 ## 📁 Workflows
 
@@ -69,13 +69,13 @@ All n8n workflows are in the `/workflows` folder:
 - Day 4: Compliance gap analyzer built
 - Day 5: Professional HTML report output
 - Day 6: Cost analysis + business impact added
-- Day 7: Three-product suite complete
+- Day 7-8: Three-product suite complete
 
 **Status:** Zero clients. Zero revenue. But the product works.
 
 ## 🤝 Connect
 - [LinkedIn](https://linkedin.com/in/kartik-sharma-b34a41422)
-- [Fiverr]([your-fiverr-link-here](https://www.fiverr.com/s/BRqmdr1))
+- [Fiverr](https://www.fiverr.com/s/GzVdL50)
 
 ---
 
