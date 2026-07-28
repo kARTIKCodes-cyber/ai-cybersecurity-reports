@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free Vulnerability Executive Report — Instant AI Demo</title>
+<meta name="description" content="Paste your vulnerability scan output and get a free AI-generated executive summary report.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0b1120;
+    --surface: #131b2e;
+    --surface-2: #1a2440;
+    --line: #26314f;
+    --text: #e7ecf7;
+    --text-dim: #93a1c2;
+    --amber: #f2a65a;
+    --amber-dim: #7a5a34;
+    --teal: #4fd1c5;
+    --red: #ef5b6a;
+    --yellow: #e8c15b;
+    --green: #57c785;
+    --radius: 10px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:'IBM Plex Sans', sans-serif;
+    line-height:1.55;
+  }
+  h1,h2,h3{
+    font-family:'Space Grotesk', sans-serif;
+    margin:0;
+    letter-spacing:-0.01em;
+  }
+  .mono{ font-family:'IBM Plex Mono', monospace; }
+  a{ color:var(--teal); }
+  .wrap{ max-width:1080px; margin:0 auto; padding:0 24px; }
+
+  /* Nav */
+  .nav{ display:flex; align-items:center; justify-content:space-between; padding:22px 0; }
+  .brand{ font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:1.05rem; }
+  .brand span{ color:var(--amber); }
+  .nav a.cta-small{
+    font-size:0.85rem; text-decoration:none; color:var(--text);
+    border:1px solid var(--line); padding:8px 16px; border-radius:999px;
+  }
+  .nav a.cta-small:hover{ border-color:var(--amber); color:var(--amber); }
+
+  /* Hero */
+  .hero{ padding:56px 0 40px; }
+  .eyebrow{
+    display:inline-block; font-family:'IBM Plex Mono', monospace; font-size:0.78rem;
+    color:var(--teal); background:rgba(79,209,197,0.08); border:1px solid rgba(79,209,197,0.25);
+    padding:5px 12px; border-radius:999px; margin-bottom:20px;
+  }
+  .hero h1{ font-size:clamp(2rem, 4.4vw, 3rem); max-width:14ch; margin-bottom:18px; }
+  .hero p.lead{ color:var(--text-dim); font-size:1.08rem; max-width:52ch; margin-bottom:28px; }
+  .hero-ctas{ display:flex; gap:14px; flex-wrap:wrap; }
+  .btn{
+    font-family:'IBM Plex Sans', sans-serif; font-weight:600; font-size:0.95rem;
+    padding:13px 26px; border-radius:8px; border:none; cursor:pointer; text-decoration:none;
+    display:inline-flex; align-items:center; gap:8px;
+  }
+  .btn-primary{ background:var(--amber); color:#231506; }
+  .btn-primary:hover{ background:#f5b676; }
+  .btn-ghost{ background:transparent; color:var(--text); border:1px solid var(--line); }
+  .btn-ghost:hover{ border-color:var(--text-dim); }
+
+  /* Transform visual — signature element */
+  .transform{
+    margin-top:52px; display:grid; grid-template-columns:1fr auto 1fr; gap:20px; align-items:stretch;
+  }
+  @media (max-width:760px){ .transform{ grid-template-columns:1fr; } .transform .arrow{ transform:rotate(90deg); margin:4px auto; } }
+  .panel{
+    background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:20px;
+  }
+  .panel .tag{ font-family:'IBM Plex Mono', monospace; font-size:0.72rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:12px; display:block;}
+  .raw-line{
+    font-family:'IBM Plex Mono', monospace; font-size:0.82rem; color:var(--text-dim);
+    padding:6px 0; border-bottom:1px dashed var(--line); opacity:0; animation:reveal 0.5s ease forwards;
+  }
+  .raw-line:nth-child(2){ animation-delay:0.15s; }
+  .raw-line:nth-child(3){ animation-delay:0.3s; }
+  .raw-line:nth-child(4){ animation-delay:0.45s; }
+  .raw-line:last-child{ border-bottom:none; }
+  @keyframes reveal{ from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:translateY(0);} }
+  .arrow{ display:flex; align-items:center; color:var(--amber); font-size:1.4rem; }
+  .finding{
+    display:flex; gap:12px; align-items:flex-start; padding:10px 0; border-bottom:1px solid var(--line);
+    opacity:0; animation:reveal 0.5s ease forwards; animation-delay:0.6s;
+  }
+  .finding:last-child{ border-bottom:none; }
+  .sev{
+    font-family:'IBM Plex Mono', monospace; font-size:0.68rem; font-weight:600; padding:3px 9px;
+    border-radius:5px; white-space:nowrap; margin-top:2px;
+  }
+  .sev-critical{ background:rgba(239,91,106,0.15); color:var(--red); }
+  .sev-high{ background:rgba(242,166,90,0.15); color:var(--amber); }
+  .sev-medium{ background:rgba(232,193,91,0.15); color:var(--yellow); }
+  .finding-text{ font-size:0.85rem; color:var(--text); }
+  .finding-text b{ display:block; margin-bottom:2px; }
+  .finding-text span{ color:var(--text-dim); font-size:0.8rem; }
+  @media (prefers-reduced-motion: reduce){
+    .raw-line, .finding{ animation:none; opacity:1; }
+  }
+
+  /* Form section */
+  .section{ padding:64px 0; border-top:1px solid var(--line); }
+  .section h2{ font-size:1.7rem; margin-bottom:10px; }
+  .section p.sub{ color:var(--text-dim); margin-bottom:32px; max-width:56ch; }
+  .form-card{
+    background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
+    padding:32px; max-width:640px;
+  }
+  label{ display:block; font-size:0.85rem; color:var(--text-dim); margin-bottom:6px; }
+  .field{ margin-bottom:20px; }
+  input[type=text], input[type=email], textarea{
+    width:100%; background:var(--surface-2); border:1px solid var(--line); color:var(--text);
+    border-radius:7px; padding:12px 14px; font-family:'IBM Plex Sans', sans-serif; font-size:0.95rem;
+  }
+  textarea{ font-family:'IBM Plex Mono', monospace; font-size:0.85rem; min-height:160px; resize:vertical; }
+  input:focus, textarea:focus{ outline:2px solid var(--teal); outline-offset:1px; border-color:var(--teal); }
+  .hp{ position:absolute; left:-9999px; }
+  .submit-row{ display:flex; align-items:center; gap:16px; margin-top:6px; }
+  .status{ font-size:0.88rem; color:var(--text-dim); }
+  .status.ok{ color:var(--green); }
+  .status.err{ color:var(--red); }
+
+  /* How it works */
+  .steps{ display:grid; grid-template-columns:repeat(3,1fr); gap:22px; }
+  @media (max-width:760px){ .steps{ grid-template-columns:1fr; } }
+  .step{ background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:22px; }
+  .step .num{ font-family:'IBM Plex Mono', monospace; color:var(--amber); font-size:0.85rem; margin-bottom:10px; }
+  .step h3{ font-size:1.05rem; margin-bottom:8px; }
+  .step p{ color:var(--text-dim); font-size:0.9rem; margin:0; }
+
+  footer{ border-top:1px solid var(--line); padding:36px 0; color:var(--text-dim); font-size:0.85rem; }
+  footer .wrap{ display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px; }
+  footer a{ color:var(--text-dim); text-decoration:none; margin-left:18px; }
+  footer a:hover{ color:var(--teal); }
+</style>
+</head>
+<body>
+
+<div class="wrap nav">
+  <div class="brand">Kartik<span>Sec</span></div>
+  <a class="cta-small" href="#try-it">Try the free demo</a>
+</div>
+
+<section class="hero">
+  <div class="wrap">
+    <span class="eyebrow">FREE · NO SIGNUP · 30 SECONDS</span>
+    <h1>Turn your vulnerability scan into an executive report in 30 seconds</h1>
+    <p class="lead">Paste raw scan output — Nessus, Qualys, or plain text — and get back a board-ready HTML summary with severity ratings and remediation guidance. No account, no install.</p>
+    <div class="hero-ctas">
+      <a href="#try-it" class="btn btn-primary">Paste your scan →</a>
+      <a href="https://github.com/kARTIKCodes-cyber/ai-cybersecurity-reports" class="btn btn-ghost" target="_blank" rel="noopener">See sample reports</a>
+    </div>
+
+    <div class="transform">
+      <div class="panel">
+        <span class="tag">Raw scan input</span>
+        <div class="raw-line">10.0.4.12 | Port 445 | SMBv1 enabled</div>
+        <div class="raw-line">10.0.4.19 | TLS 1.0 supported</div>
+        <div class="raw-line">10.0.4.31 | Apache 2.4.29 (CVE-2021-41773)</div>
+        <div class="raw-line">10.0.4.44 | Default creds on admin panel</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="panel">
+        <span class="tag">Executive report</span>
+        <div class="finding">
+          <span class="sev sev-critical">CRITICAL</span>
+          <div class="finding-text"><b>Path traversal / RCE risk</b><span>Apache 2.4.29 — unpatched, public-facing</span></div>
+        </div>
+        <div class="finding" style="animation-delay:0.7s">
+          <span class="sev sev-high">HIGH</span>
+          <div class="finding-text"><b>Default credentials in use</b><span>Admin panel accessible with vendor defaults</span></div>
+        </div>
+        <div class="finding" style="animation-delay:0.8s">
+          <span class="sev sev-medium">MEDIUM</span>
+          <div class="finding-text"><b>Legacy protocol exposure</b><span>SMBv1 and TLS 1.0 still enabled</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="try-it">
+  <div class="wrap">
+    <h2>Get your free demo report</h2>
+    <p class="sub">This generates a shortened demo report (top 3 findings, watermarked). Full unlimited reports with cost analysis are available separately.</p>
+
+    <form class="form-card" id="scanForm">
+      <!-- honeypot -->
+      <input type="text" name="botcheck" class="hp" tabindex="-1" autocomplete="off">
+
+      <div class="field">
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" required>
+      </div>
+      <div class="field">
+        <label for="email">Email — we'll send your report here</label>
+        <input type="email" id="email" name="email" required>
+      </div>
+      <div class="field">
+        <label for="scandata">Paste your scan output</label>
+        <textarea id="scandata" name="scandata" required placeholder="e.g. 10.0.4.31 | Apache 2.4.29 (CVE-2021-41773) | Port 443..."></textarea>
+      </div>
+
+      <div class="submit-row">
+        <button type="submit" class="btn btn-primary" id="submitBtn">Generate my free report</button>
+        <span class="status" id="statusMsg"></span>
+      </div>
+    </form>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>How it works</h2>
+    <p class="sub">Three steps between your raw scan and a report you can hand to a CISO.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="num">01</div>
+        <h3>Paste your scan data</h3>
+        <p>Any format works — Nessus/Qualys export, or a plain list of findings.</p>
+      </div>
+      <div class="step">
+        <div class="num">02</div>
+        <h3>AI structures the findings</h3>
+        <p>Severity, business impact, and remediation guidance are generated automatically.</p>
+      </div>
+      <div class="step">
+        <div class="num">03</div>
+        <h3>Report lands in your inbox</h3>
+        <p>A clean HTML executive summary — ready to forward as-is.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div>© 2026 Kartik Sharma — Cybersecurity, Shoolini University</div>
+    <div>
+      <a href="https://github.com/kARTIKCodes-cyber/ai-cybersecurity-reports" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://www.fiverr.com/s/GzVdL50" target="_blank" rel="noopener">Full reports on Fiverr</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+document.getElementById('scanForm').addEventListener('submit', async function(e){
+  e.preventDefault();
+  const btn = document.getElementById('submitBtn');
+  const status = document.getElementById('statusMsg');
+  const form = e.target;
+
+  // Basic honeypot check
+  if (form.botcheck.value) return;
+
+  btn.disabled = true;
+  btn.textContent = 'Sending...';
+  status.textContent = '';
+  status.className = 'status';
+
+  const payload = {
+    access_key: '27ff11fc-59f9-4bbc-86a4-dfbd4da91509',
+    subject: 'New free vulnerability report request',
+    name: form.name.value,
+    email: form.email.value,
+    message: form.scandata.value
+  };
+
+  try{
+    const res = await fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    if (data.success){
+      status.textContent = 'Got it — your report will arrive by email shortly.';
+      status.className = 'status ok';
+      form.reset();
+    } else {
+      throw new Error(data.message || 'Submission failed');
+    }
+  } catch(err){
+    status.textContent = 'Something went wrong. Please try again or email directly.';
+    status.className = 'status err';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Generate my free report';
+  }
+});
+</script>
+
+</body>
+</html>
