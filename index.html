@@ -266,34 +266,31 @@ document.getElementById('scanForm').addEventListener('submit', async function(e)
   if (form.botcheck.value) return;
 
   btn.disabled = true;
-  btn.textContent = 'Sending...';
+  btn.textContent = 'Generating...';
   status.textContent = '';
   status.className = 'status';
 
   const payload = {
-    access_key: '27ff11fc-59f9-4bbc-86a4-dfbd4da91509',
-    subject: 'New free vulnerability report request',
-    name: form.name.value,
     email: form.email.value,
     message: form.scandata.value
   };
 
   try{
-    const res = await fetch('https://api.web3forms.com/submit', {
+    const res = await fetch('https://ghostspec.app.n8n.cloud/webhook-test/vulnerability-report', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
       body: JSON.stringify(payload)
     });
     const data = await res.json();
-    if (data.success){
-      status.textContent = 'Got it — your report will arrive by email shortly.';
+    if (data.HTML_Report){
+      status.textContent = 'Report generated! Check your email.';
       status.className = 'status ok';
       form.reset();
     } else {
-      throw new Error(data.message || 'Submission failed');
+      throw new Error('No report returned');
     }
   } catch(err){
-    status.textContent = 'Something went wrong. Please try again or email directly.';
+    status.textContent = 'Something went wrong. Please try again.';
     status.className = 'status err';
   } finally {
     btn.disabled = false;
