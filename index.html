@@ -1230,44 +1230,40 @@ window.addEventListener('scroll',()=>{
   document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>20);
 });
 
-// Form submission
+// Form submission - mailto fallback (n8n expired)
 const form = document.getElementById('scanForm');
 const btn = document.getElementById('submitBtn');
 const status = document.getElementById('statusMsg');
 
-form.addEventListener('submit', async function(e){
+form.addEventListener('submit', function(e){
   e.preventDefault();
-
+  
   if(form.botcheck.value) return;
-
+  
+  const email = document.getElementById('email').value;
+  const scanData = document.getElementById('scandata').value;
+  
   btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span> Processing...';
-  status.innerHTML = '<span class="status-msg loading">Analyzing scan data with AI...</span>';
-
-  const payload = {
-    email: form.email.value,
-    message: form.scandata.value
-  };
-
-  try{
-    const res = await fetch('https://ghostspec.app.n8n.cloud/webhook-test/vulnerability-report', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-    const data = await res.json();
-    if(data.HTML_Report || data.success){
-      status.innerHTML = '<span class="status-msg ok">✅ Report generated! Check your email.</span>';
-      form.reset();
-    } else {
-      throw new Error('No report returned');
-    }
-  } catch(err){
-    status.innerHTML = '<span class="status-msg err">❌ Something went wrong. Please try again or email directly.</span>';
-  } finally {
-    btn.disabled = false;
-    btn.innerHTML = '<span>⚡ Generate Report</span>';
-  }
+  btn.innerHTML = '<span>Opening email...</span>';
+  status.innerHTML = '<span class="status-msg loading">Preparing your request...</span>';
+  
+  // Build mailto link with pre-filled data
+  const subject = encodeURIComponent('Free Vulnerability Report Request');
+  const body = encodeURIComponent(
+    `Hi Kartik,\n\n` +
+    `I'd like a free vulnerability executive report.\n\n` +
+    `My email: ${email}\n\n` +
+    `Scan Data:\n${scanData}\n\n` +
+    `---\nSent from KartikSec Free Demo`
+  );
+  
+  // Open user's email client
+  window.location.href = `mailto:kartiklord69@gmail.com?subject=${subject}&body=${body}`;
+  
+  status.innerHTML = '<span class="status-msg ok">✅ Your email app should be open. Hit SEND and I\'ll reply with your report within 30 minutes.</span>';
+  
+  btn.disabled = false;
+  btn.innerHTML = '<span>⚡ Generate Report</span>';
 });
 </script>
 
